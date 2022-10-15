@@ -4,6 +4,10 @@ library(readr)
 library(dplyr)
 library(magrittr)
 library(RColorBrewer)
+library(tidyr)
+library(ggtree)
+library(ape)
+library(stringr)
 # this post is very useful for understanding sf objects
 # https://www.jessesadler.com/post/simple-feature-objects/#:~:text=The%20most%20likely%20way%20to,an%20sf%20object%20from%20scratch.
 
@@ -35,6 +39,36 @@ cols<-brewer.pal(7, "Set1")
 mapview(test, zcol="Soil", col.regions = cols)
 
 
+crossing(c("max ice", "min ice", "no ice"), c("ziploc", "open"), c("tube", "tissue"))
+
+
+# read in original tree
+nwk<-ape::read.tree("/Users/katieemelianova/Desktop/Diospyros/diospyros_plots/RadiatingSpeciesDiospyros_ingrp-inds.nwk")
+
+# plot the tree in cirlular
+ggtree(nwk, layout="circular")
+
+# split the tip name column by BT to get the population names
+# I dont understand the format of this function and I dont like it at all
+species<-sapply(strsplit(nwk$tip.label,"BT"), `[`, 1)  
+
+# set the species in the newick object
+nwk$species <- species
+
+# make a list where item name is species name and objects within are the tip labels belonging to that species
+groupInfo<-split(nwk$tip.label, nwk$species)
+
+# use groupOTU to group the tips by species
+nwk_grouped<-groupOTU(nwk, groupInfo, group_name = "species")
+ggtree(nwk_grouped, aes(color=species), layout='circular') + geom_tiplab(size=1, aes(angle=angle))
+
+
+
+
+
+
+data(chiroptera)
+groupInfo <- split(chiroptera$tip.label, gsub("_\\w+", "", chiroptera$tip.label))
 
 
 
