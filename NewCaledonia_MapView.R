@@ -8,6 +8,7 @@ library(tidyr)
 library(ggtree)
 library(ape)
 library(stringr)
+library(phytools)
 # this post is very useful for understanding sf objects
 # https://www.jessesadler.com/post/simple-feature-objects/#:~:text=The%20most%20likely%20way%20to,an%20sf%20object%20from%20scratch.
 
@@ -60,15 +61,15 @@ groupInfo<-split(nwk$tip.label, nwk$species)
 
 # use groupOTU to group the tips by species
 nwk_grouped<-groupOTU(nwk, groupInfo, group_name = "species")
-ggtree(nwk_grouped, aes(color=species), layout='circular') + geom_tiplab(size=1, aes(angle=angle))
+ggtree(nwk_grouped, aes(color=species), layout='circular') + geom_tiplab(size=2.5) + theme(legend.position = "None")
+dev.off()
+  
 
+# this is a  handy bit of code to make up a random tree and plot it in different ways
+#tr <- rtree(10)
+#tr$tip.label = gsub('^', 'A long label: ', tr$tip.label)
+#ggtree(tr, branch.length = 'none') + geom_tiplab()
 
-
-
-
-
-data(chiroptera)
-groupInfo <- split(chiroptera$tip.label, gsub("_\\w+", "", chiroptera$tip.label))
 
 
 
