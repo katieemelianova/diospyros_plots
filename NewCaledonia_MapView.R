@@ -73,11 +73,17 @@ nwk$species <- species
 # make a list where item name is species name and objects within are the tip labels belonging to that species
 groupInfo<-split(nwk$tip.label, nwk$species)
 
-# use groupOTU to group the tips by species
+# use groupOTU to group the tips by species and plot
 nwk_grouped<-groupOTU(nwk, groupInfo, group_name = "species")
-ggtree(nwk_grouped, aes(color=species), layout='circular') + geom_tiplab(size=2.5) + theme(legend.position = "None")
+ggtree(nwk_grouped, aes(color=species), layout='circular') + geom_tiplab(size=3.2) + theme(legend.position = "None")
 dev.off()
-  
+
+# take the same tree as above but make the tip labels the species name only (no population info)
+nwk_grouped_speciesonly<-nwk_grouped
+nwk_grouped_speciesonly$tip.label <- nwk_grouped_speciesonly$species
+ggtree(nwk_grouped_speciesonly, aes(color=species), layout='circular') + geom_tiplab(size=4) + theme(legend.position = "None")
+
+
 
 # this is a  handy bit of code to make up a random tree and plot it in different ways
 #tr <- rtree(10)
